@@ -9,6 +9,8 @@ import com.qingcheng.service.system.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +96,44 @@ public class MenuServiceImpl implements MenuService {
     public void delete(String id) {
         menuMapper.deleteByPrimaryKey(id);
     }
+
+    /*
+    返回菜单的树状数据 供前端展示
+     */
+    public List<Map> findAllMenu() {
+        /*
+        实现思路：把所有的菜单列表查询出来，然后筛选出每一级的菜单列表
+         */
+        List<Menu> menuList = findAll();
+
+        return findMenuListByParentId(menuList,"0");
+    }
+
+    /*
+    动态获取菜单导航
+    查询下级菜单  递归查询
+     */
+    public List<Map> findMenuListByParentId(List<Menu> menuList,String parentId){
+        List<Map> mapList = new ArrayList<>();
+
+        for (Menu menu:menuList){
+         if (menu.getParentId().equals(parentId)){
+             Map map = new HashMap();
+             map.put("path",menu.getId());
+             map.put("title",menu.getName());
+             map.put("icon",menu.getIcon());
+             map.put("linkUrl",menu.getUrl());
+
+             /*
+             递归查询每个一级id的所有子节点
+              */
+             map.put("children",findMenuListByParentId(menuList,menu.getId()));
+             mapList.add(map);
+         }
+        }
+        return mapList;
+    }
+
 
     /**
      * 构建查询条件

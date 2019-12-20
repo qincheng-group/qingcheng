@@ -60,4 +60,12 @@ public class MenuController {
         return new Result();
     }
 
+    /*
+    查询展示菜单的树形结构
+     */
+    @GetMapping("/findMenu")
+    public List<Map> findMenu(){
+        return menuService.findAllMenu();
+    }
+
 }

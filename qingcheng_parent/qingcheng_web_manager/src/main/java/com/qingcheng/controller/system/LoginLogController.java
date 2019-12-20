@@ -5,6 +5,7 @@ import com.qingcheng.entity.PageResult;
 import com.qingcheng.entity.Result;
 import com.qingcheng.pojo.system.LoginLog;
 import com.qingcheng.service.system.LoginLogService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,6 +26,19 @@ public class LoginLogController {
     public PageResult<LoginLog> findPage(int page, int size){
         return loginLogService.findPage(page, size);
     }
+
+
+    /*
+    查询当前登录人的登录日志
+     */
+    @GetMapping("/findPageByLogin")
+    public PageResult<LoginLog> findPageByLogin(int page, int size){
+        String loginName = SecurityContextHolder.getContext().getAuthentication().getName();
+        Map map = new HashMap();
+        map.put("loginName",loginName);
+        return loginLogService.findPage(map,page, size);
+    }
+
 
     @PostMapping("/findList")
     public List<LoginLog> findList(@RequestBody Map<String,Object> searchMap){

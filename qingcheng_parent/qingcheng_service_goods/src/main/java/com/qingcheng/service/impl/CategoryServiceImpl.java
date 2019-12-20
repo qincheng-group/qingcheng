@@ -88,10 +88,26 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     /**
-     *  删除
+     *  删除：
+     *  删除的时候要先判断有没有下级条目存在 思路就是
+     *  1.先把要删除的商品的id作为一个parentId在商品表里面查找  是否有parentId是该id的商品条目
+     *  2.如果有  就说明这个要删除的商品还有下级商品，抛出异常 不能删除
+     *  3.如果没有 就说明该商品不是任何商品的父商品 可以删除
      * @param id
      */
     public void delete(Integer id) {
+        //判断是否存在下级分类
+        Example example = new Example(Category.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("parentId",id);
+
+        //得到所有的父id是要删除的分类id的个数
+        int count = categoryMapper.selectCountByExample(example);
+
+        if (count>0){
+            throw new RuntimeException("存在下级分类不能删除！");
+        }
+
         categoryMapper.deleteByPrimaryKey(id);
     }
 

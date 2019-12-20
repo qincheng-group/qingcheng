@@ -44,18 +44,22 @@ public class CategoryController {
 
     @PostMapping("/add")
     public Result add(@RequestBody Category category){
+        System.out.println("================================="+category);
         categoryService.add(category);
+
         return new Result();
     }
 
     @PostMapping("/update")
     public Result update(@RequestBody Category category){
+        System.out.println("----------------------------"+category);
         categoryService.update(category);
         return new Result();
     }
 
     @GetMapping("/delete")
     public Result delete(Integer id){
+        System.out.println("------------===========删除了");
         categoryService.delete(id);
         return new Result();
     }

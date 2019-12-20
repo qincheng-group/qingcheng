@@ -18,6 +18,9 @@ public class UploadController {
     @Autowired
     private HttpServletRequest request;
 
+    /*
+    本地上传
+     */
     @PostMapping("/native")
     public String nativeUpload(@RequestParam("file") MultipartFile file) {
         String path=request.getSession().getServletContext().getRealPath("img");
@@ -38,16 +41,21 @@ public class UploadController {
     @Autowired
     private OSSClient ossClient;
 
+    /*
+    阿里云oss上传
+     */
     @PostMapping("/oss")
     public String ossUpload(@RequestParam("file") MultipartFile file,String folder){
-        String bucketName = "qing-cheng";
+        //上传到oss的文件夹名
+        System.out.println();
+        String bucketName = "qingchengjsp";
         String fileName= folder+"/"+ UUID.randomUUID()+"_"+file.getOriginalFilename();
         try {
             ossClient.putObject(bucketName, fileName, file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "http://"+bucketName+"."+ ossClient.getEndpoint().toString().replace("http://","") +"/"+fileName;
+        return "https://"+bucketName+".oss-cn-beijing.aliyuncs.com/"+fileName;
     }
 
 

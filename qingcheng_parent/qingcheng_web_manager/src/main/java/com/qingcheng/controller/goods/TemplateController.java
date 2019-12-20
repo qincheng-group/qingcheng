@@ -44,6 +44,8 @@ public class TemplateController {
 
     @PostMapping("/add")
     public Result add(@RequestBody Template template){
+        template.setParaNum(0);
+        template.setSpecNum(0);
         templateService.add(template);
         return new Result();
     }

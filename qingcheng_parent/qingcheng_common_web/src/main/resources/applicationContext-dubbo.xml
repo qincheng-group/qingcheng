@@ -14,5 +14,4 @@
 	<dubbo:application name="${dubbo.application}" />
 	<dubbo:registry protocol="zookeeper" address="${zk.address}"/>
 	<dubbo:annotation package="com.qingcheng.controller" />
-
 </beans>
